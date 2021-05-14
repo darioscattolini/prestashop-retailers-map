@@ -1,5 +1,7 @@
+import L from './leafletextension';
+
 export default class LeafletMap {
-  #L = require('leaflet');
+  #L = L;
   #containerId;
   #defaultCenter;
   #defaultZoom;
