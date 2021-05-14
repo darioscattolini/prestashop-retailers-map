@@ -1,0 +1,4 @@
+config*.xml
+/vendor/*
+/views/img/*
+/views/js/src/node_modules/

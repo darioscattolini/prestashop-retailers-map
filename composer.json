@@ -1,0 +1,26 @@
+{
+  "name": "darioscattolini/retailersmap",
+  "description": "Manage a list of retailers locations and display them in a Leaflet map.",
+  "authors": [
+    {
+      "name": "Darío Scattolini",
+      "email": "dario_scattolini@hotmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "PrestaShop\\Module\\RetailersMap\\": "src/"
+    },
+    "classmap": [],
+    "exclude-from-classmap": []
+  },
+  "config": {
+    "preferred-install": "dist",
+    "prepend-autoloader": false
+  },
+  "type": "prestashop-module",
+  "license": "No license"
+}

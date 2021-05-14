@@ -1,0 +1,17 @@
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{{ ps.form_group_row(form.name, {}, { 'label': form.name.vars.label }) }}
+
+{% block retailer_form_special_rows %} 
+  {{ ps.form_group_row(
+    form.id_country,
+    { 'attr': { 'data-states-url': path('admin_country_states') } },
+    { 'label': form.id_country.vars.label }
+  ) }}
+
+  <div class="js-retailer-state">
+    {{ ps.form_group_row(
+      form.id_state, {}, { 'label': form.id_state.vars.label }
+    ) }}
+  </div>
+{% endblock %}

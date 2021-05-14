@@ -1,0 +1,239 @@
+imports:
+  - { resource: ./common.yml }
+
+parameters:
+  page_data.group: 
+    name: 'group'
+    icon: 'groups'
+    route: 'ps_retailersmap_group'
+  page_data.retailer: 
+    name: 'retailer'
+    icon: 'store'
+    route: 'ps_retailersmap_retailer'
+  page_data.marker: 
+    name: 'marker'
+    icon: 'edit_location_alt'
+    route: 'ps_retailersmap_marker'
+
+services:
+  _defaults:
+    public: true
+
+
+  # FORM SERVICES
+  ##############################################################################
+
+  # Settings
+  prestashop.module.retailers_map.form.data_provider.settings:
+    class: 'PrestaShop\Module\RetailersMap\Form\Settings\SettingsFormDataProvider'
+
+  prestashop.module.retailers_map.form.form_handler.settings:
+    class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+    arguments:
+      - '@=service("form.factory").createBuilder()'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.module.retailers_map.form.data_provider.settings'
+      -
+        'settings': 'PrestaShop\Module\RetailersMap\Form\Settings\SettingsType'   #maybe could be added here as service
+      - 'AdministrationPage'                                                      #check
+
+  # Groups
+  prestashop.module.retailers_map.form.group.type:
+    class: 'PrestaShop\Module\RetailersMap\Form\Group\GroupType'
+    public: true
+    tags:
+      - { name: form.type }
+  
+  prestashop.module.retailers_map.form.identifiable_object.group.data_provider:
+    class: 'PrestaShop\Module\RetailersMap\Form\Group\GroupFormDataProvider'
+    arguments: 
+      - '@doctrine.orm.default_entity_manager'
+
+  prestashop.module.retailers_map.form.identifiable_object.group.data_handler:
+    class: 'PrestaShop\Module\RetailersMap\Form\Group\GroupFormDataHandler'
+    arguments: 
+      - '@doctrine.orm.default_entity_manager'
+  
+  prestashop.module.retailers_map.form.identifiable_object.group.form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShop\Module\RetailersMap\Form\Group\GroupType'
+      - '@prestashop.module.retailers_map.form.identifiable_object.group.data_provider'
+
+  prestashop.module.retailers_map.form.identifiable_object.group.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.module.retailers_map.form.identifiable_object.group.data_handler'
+  
+  prestashop.module.retailers_map.form.group.choice_provider:
+    class: 'PrestaShop\Module\RetailersMap\Form\Group\GroupChoiceProvider'
+    arguments:
+      - '@doctrine.orm.default_entity_manager'
+ 
+  # States
+  prestashop.module.retailers_map.form.state.choice_provider:
+    class: 'PrestaShop\Module\RetailersMap\Form\State\StateChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@prestashop.adapter.data_provider.country'
+
+  prestashop.module.retailers_map.form.state.type:
+    class: 'PrestaShop\Module\RetailersMap\Form\State\StateType'
+    public: true
+    arguments:
+      - '@prestashop.module.retailers_map.form.state.choice_provider'
+
+  # Retailers
+  prestashop.module.retailers_map.form.retailer.type:
+    class: 'PrestaShop\Module\RetailersMap\Form\Retailer\RetailerType'
+    public: true
+    arguments:
+      - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+      - '@prestashop.adapter.form.choice_provider.country_state_by_id'
+      - '@prestashop.module.retailers_map.form.group.choice_provider'
+      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+      - '@translator'
+    tags:
+      - { name: form.type }
+
+  prestashop.module.retailers_map.form.identifiable_object.retailer.data_provider:
+    class: 'PrestaShop\Module\RetailersMap\Form\Retailer\RetailerFormDataProvider'
+    arguments: 
+      - '@doctrine.orm.default_entity_manager'
+      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+
+
+  prestashop.module.retailers_map.form.identifiable_object.retailer.data_handler:
+    class: 'PrestaShop\Module\RetailersMap\Form\Retailer\RetailerFormDataHandler'
+    arguments: 
+      - '@doctrine.orm.default_entity_manager'
+  
+  prestashop.module.retailers_map.form.identifiable_object.retailer.form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShop\Module\RetailersMap\Form\Retailer\RetailerType'
+      - '@prestashop.module.retailers_map.form.identifiable_object.retailer.data_provider'
+
+  prestashop.module.retailers_map.form.identifiable_object.retailer.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.module.retailers_map.form.identifiable_object.retailer.data_handler'
+
+
+  # GRID SERVICES
+  ##############################################################################
+
+  # Groups
+  prestashop.module.retailers_map.grid.group.definition_factory:
+    class: 'PrestaShop\Module\RetailersMap\Grid\Group\GroupGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true
+
+  prestashop.module.retailers_map.grid.group.query_builder:
+    class: 'PrestaShop\Module\RetailersMap\Grid\Group\GroupQueryBuilder'
+    #parent: 'prestashop.core.grid.abstract_query_builder'
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+    #public: true
+    
+  prestashop.module.retailers_map.grid.group.data_provider:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.module.retailers_map.grid.group.query_builder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'retailers_group'
+  
+  prestashop.module.retailers_map.grid.group.grid_factory:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.module.retailers_map.grid.group.definition_factory'
+      - '@prestashop.module.retailers_map.grid.group.data_provider' 
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
+  # Retailers
+  prestashop.module.retailers_map.grid.retailer.definition_factory:
+    class: 'PrestaShop\Module\RetailersMap\Grid\Retailer\RetailerGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true
+
+  prestashop.module.retailers_map.grid.retailer.query_builder:
+    class: 'PrestaShop\Module\RetailersMap\Grid\Retailer\RetailerQueryBuilder'
+    #parent: 'prestashop.core.grid.abstract_query_builder'
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+    #public: true
+    
+  prestashop.module.retailers_map.grid.retailer.data_provider:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.module.retailers_map.grid.retailer.query_builder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'retailer'
+  
+  prestashop.module.retailers_map.grid.retailer.grid_factory:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.module.retailers_map.grid.retailer.definition_factory'
+      - '@prestashop.module.retailers_map.grid.retailer.data_provider' 
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+      
+  # CONTROLLERS
+  ##############################################################################
+
+  PrestaShop\Module\RetailersMap\Controller\Admin\AdminController:
+    class: PrestaShop\Module\RetailersMap\Controller\Admin\AdminController
+    #arguments:
+    #  - '@doctrine.cache.provider'
+
+  prestashop.module.retailers_map.controller.admin.group:
+    class: PrestaShop\Module\RetailersMap\Controller\Admin\CRUDController
+    arguments:
+      - '%page_data.group%'
+      - '@prestashop.module.retailers_map.repository.group_repository'
+      - '@prestashop.module.retailers_map.grid.group.grid_factory'
+      - '@prestashop.module.retailers_map.form.identifiable_object.group.form_builder'
+      - '@prestashop.module.retailers_map.form.identifiable_object.group.form_handler'
+      - '@prestashop.module.retailers_map.toolbar.data_provider'
+
+  prestashop.module.retailers_map.controller.admin.retailer:
+    class: PrestaShop\Module\RetailersMap\Controller\Admin\RetailerController
+    arguments:
+      - '%page_data.retailer%'
+      - '@prestashop.module.retailers_map.repository.retailer_repository'
+      - '@prestashop.module.retailers_map.grid.retailer.grid_factory'
+      - '@prestashop.module.retailers_map.form.identifiable_object.retailer.form_builder'
+      - '@prestashop.module.retailers_map.form.identifiable_object.retailer.form_handler'
+      - '@prestashop.module.retailers_map.toolbar.data_provider'
+
+  prestashop.module.retailers_map.controller.admin.marker:
+    class: PrestaShop\Module\RetailersMap\Controller\Admin\CRUDController
+    arguments:
+      - '%page_data.group%'
+      - '@prestashop.module.retailers_map.repository.group_repository'
+      - '@prestashop.module.retailers_map.grid.group.grid_factory'
+      - '@prestashop.module.retailers_map.form.identifiable_object.group.form_builder'
+      - '@prestashop.module.retailers_map.form.identifiable_object.group.form_handler'
+      - '@prestashop.module.retailers_map.toolbar.data_provider'
+      #- '%page_data.marker%'
+      #- '@prestashop.module.retailers_map.repository.marker_repository'
+      #- '@prestashop.module.retailers_map.grid.factory.markers'
+      #- '@prestashop.module.retailers_map.form.identifiable_object.builder.marker_form_builder'
+      #- '@prestashop.module.retailers_map.form.identifiable_object.handler.marker_form_handler'
+      #- '@prestashop.module.retailers_map.toolbar.data_provider'
+
+  # OTHER SERVICES
+  ##############################################################################
+  prestashop.module.retailers_map.toolbar.data_provider:
+    class: 'PrestaShop\Module\RetailersMap\Toolbar\ToolbarDataProvider'

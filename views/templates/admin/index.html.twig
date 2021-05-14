@@ -1,0 +1,9 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  {{ renderhook('displayRetailersMap', {'pageId': 'moduleAdmin'}) }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}

@@ -1,0 +1,98 @@
+ps_retailersmap_index:
+  path: /retailers-map/index
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShop\Module\RetailersMap\Controller\Admin\AdminController::indexAction'
+    _legacy_controller: 'AdminRetailersmap'
+    _legacy_link: 'AdminRetailersmap'
+
+ps_retailersmap_settings:
+  path: /retailers-map/settings
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShop\Module\RetailersMap\Controller\Admin\SettingsController::indexAction'
+    _legacy_controller: 'AdminRetailersmapSettings'
+    _legacy_link: 'AdminRetailersmapSettings'
+
+# GROUP
+ps_retailersmap_group:
+  path: /retailers-map/groups
+  methods: [GET]
+  defaults:
+    _controller: 'prestashop.module.retailers_map.controller.admin.group:indexAction'
+    _legacy_controller: 'AdminRetailersmapGroups'
+    _legacy_link: 'AdminRetailersmapGroups'
+
+ps_retailersmap_group_create:
+  path: /retailers-map/groups/new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'prestashop.module.retailers_map.controller.admin.group:createAction'
+    _legacy_controller: 'AdminRetailersmapGroups'
+    _legacy_link: 'AdminRetailersmapGroups:add'
+
+ps_retailersmap_group_edit:
+  path: /retailers-map/groups/{itemId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'prestashop.module.retailers_map.controller.admin.group:editAction'
+    _legacy_controller: 'AdminRetailersmapGroups'
+    _legacy_link: 'AdminRetailersmapGroups:update'
+  requirements:
+    itemId: \d+  #por que?
+
+ps_retailersmap_group_delete:
+  path: /retailers-map/groups/{itemId}/delete
+  methods: [POST]
+  defaults:
+    _controller: 'prestashop.module.retailers_map.controller.admin.group:deleteAction'
+    _legacy_controller: 'AdminRetailersmapGroups'
+    _legacy_link: 'AdminRetailersmapGroups:delete'
+  requirements:
+    itemId: \d+  #por que?
+
+# RETAILER
+ps_retailersmap_retailer:
+  path: /retailers-map/retailers
+  methods: [GET]
+  defaults:
+    _controller: 'prestashop.module.retailers_map.controller.admin.retailer:indexAction'
+    _legacy_controller: 'AdminRetailersmapRetailers'
+    _legacy_link: 'AdminRetailersmapRetailers'
+
+ps_retailersmap_retailer_create:
+  path: /retailers-map/retailers/new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'prestashop.module.retailers_map.controller.admin.retailer:createAction'
+    _legacy_controller: 'AdminRetailersmapRetailers'
+    _legacy_link: 'AdminRetailersmapRetailers:add'
+
+ps_retailersmap_retailer_edit:
+  path: /retailers-map/retailers/{itemId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'prestashop.module.retailers_map.controller.admin.retailer:editAction'
+    _legacy_controller: 'AdminRetailersmapRetailers'
+    _legacy_link: 'AdminRetailersmapRetailers:update'
+  requirements:
+    itemId: \d+  #por que?
+
+ps_retailersmap_retailer_delete:
+  path: /retailers-map/retailers/{itemId}/delete
+  methods: [POST]
+  defaults:
+    _controller: 'prestashop.module.retailers_map.controller.admin.retailer:deleteAction'
+    _legacy_controller: 'AdminRetailersmapRetailers'
+    _legacy_link: 'AdminRetailersmapRetailers:delete'
+  requirements:
+    itemId: \d+  #por que?
+
+# MARKER
+ps_retailersmap_marker:
+  path: /retailers-map/markers
+  methods: [GET]
+  defaults:
+    _controller: 'prestashop.module.retailers_map.controller.admin.retailer:indexAction'  #cambiar retailer por marker
+    _legacy_controller: 'AdminRetailersmapMarkers'
+    _legacy_link: 'AdminRetailersmapMarkers'

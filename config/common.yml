@@ -1,0 +1,20 @@
+services:
+  prestashop.module.retailers_map.installer:
+    class: PrestaShop\Module\RetailersMap\Database\Installer
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '%database_engine%'
+
+  # Repositories
+  prestashop.module.retailers_map.repository.group_repository:
+    class: Doctrine\ORM\EntityRepository
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    arguments:
+      - PrestaShop\Module\RetailersMap\Entity\RetailersmapGroup
+  
+  prestashop.module.retailers_map.repository.retailer_repository:
+    class: Doctrine\ORM\EntityRepository
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    arguments:
+      - PrestaShop\Module\RetailersMap\Entity\RetailersmapRetailer

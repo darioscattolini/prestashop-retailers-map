@@ -1,0 +1,37 @@
+{
+  "name": "prestashop-retailersmap",
+  "version": "1.0.0",
+  "description": "Manage a list of retailers locations and display them in a Leaflet map.",
+  "main": "index.js",
+  "dependencies": {
+    "core-js": "^3.9.0",
+    "leaflet": "^1.7.1",
+    "regenerator-runtime": "^0.13.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.13",
+    "@babel/preset-env": "^7.12.13",
+    "ajv": "^6.9.1",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-loader": "^7.1.5",
+    "babel-register": "^6.26.0",
+    "clean-webpack-plugin": "^0.1.19",
+    "exports-loader": "^0.6.3",
+    "expose-loader": "^0.7.5",
+    "file-loader": "^0.10",
+    "imports-loader": "^0.8.0",
+    "loader-utils": "^1.2.3",
+    "terser-webpack-plugin": "^4.2.3",
+    "uglify-save-license": "^0.4.1",
+    "webpack": "^4.0.0",
+    "webpack-cli": "^3.3.12"
+  },
+  "scripts": {
+    "build": "NODE_ENV=production webpack --progress --colors --debug --display-chunks",
+    "dev": "webpack --progress --color --debug --display-chunks --watch",
+    "watch": "npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "AFL-3.0"
+}

@@ -1,0 +1,50 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% set mapHeight = settingsForm.settings.mapHeight %}
+{% set cmsPageId = settingsForm.settings.cmsPageId %}
+
+{% block content %}
+  {% block settings_form %}
+    {{ form_start(settingsForm) }}
+      <div class="card">
+        <h3 class="card-header">
+          <i class="material-icons">settings</i>
+            {{ 'Settings'|trans({}, 'Modules.Retailersmap.Settings') }}
+        </h3>
+        
+        <div class="card-block row">
+          <div class="card-text">
+            {{ form_errors(settingsForm) }}
+            
+            {{ ps.form_group_row(
+              mapHeight, 
+              { attr: { value : mapHeight.vars.value } },
+              { label: mapHeight.vars.label }
+            ) }}
+
+            {{ ps.form_group_row(
+              cmsPageId, 
+              { attr: { value : cmsPageId.vars.value } },
+              { label: cmsPageId.vars.label }
+            ) }}
+
+            {% block settings_form_rest %}
+              {{ form_rest(settingsForm) }}
+            {% endblock %}
+          </div>
+        </div>
+        
+        <div class="card-footer clearfix">
+          <button class="btn btn-primary float-right">
+            {{ 'Save'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
+      </div>
+    {{ form_end(settingsForm) }}
+  {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}

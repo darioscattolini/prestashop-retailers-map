@@ -1,0 +1,121 @@
+.map-container {
+  position: relative;
+}
+
+.search-bar-container {
+  width: 360px;
+  position: absolute;
+  right: 0%;
+  z-index: 999999;
+  padding-top: 10px;
+  padding-right: 10px;
+  font-size: 18px;
+}
+
+.search-bar-container form {
+  position: relative;
+  background: #111111;
+  border-radius: 7px;
+}
+
+.search-bar-container input, 
+.search-bar-container button {
+  height: 50px;
+  border: 0;
+}
+
+.search-bar-container input {
+  outline: 0;
+  width: 100%;
+  background: #fff;
+  color: #2f2f2f;
+  padding: 0 16px;
+  border-radius: 7px;
+  appearance: none;
+  transition: all .3s cubic-bezier(0, 0, 0.43, 1.49);
+  transition-property: width, border-radius;
+  z-index: 1;
+  position: relative;
+  box-shadow: 2px 2px 5px #2f2f2f;
+}
+
+.search-bar-container form button {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  background: #111111;
+  color: #c0c0c0;
+  border-radius: 0 7px 7px 0;
+}
+
+.search-bar-container input:not(:placeholder-shown) {
+  border-radius: 7px 0 0 7px;
+  width: calc(100% - 60px);
+}
+
+.search-bar-container input:not(:placeholder-shown) + button {
+  display: block;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px #2f2f2f;
+}
+
+.search-bar-container label {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
+
+#no-result-alert,
+#many-results-alert {
+  position: absolute;
+  margin-top: 0.3em;
+  padding: 8px 16px;
+  width: 350px;
+  border-radius: 7px;
+  box-shadow: 2px 2px 5px #2f2f2f;
+  outline: 0;
+  background: rgb(250, 244, 189);
+  color: #2f2f2f;
+  appearance: none;
+  font-size: 0.9em;
+  line-height: 2;
+  overflow: hidden;
+  height: 0;
+  opacity: 0;
+  transition: height 0ms 400ms, opacity 400ms 0ms;
+}
+
+#no-result-alert.visible,
+#many-results-alert.visible {
+  height: auto; opacity: 1;
+  transition: height 0ms 0ms, opacity 600ms 0ms;
+}
+
+#many-results-alert.visible ul {
+  list-style-type: none;
+  padding: 0 0 0 10px;
+  margin: 0;
+}
+
+#many-results-alert.visible button {
+  background-color: transparent;
+  font-size: 0.9em;
+  color: inherit;
+  padding: 0;
+  height: auto;
+  line-height: inherit;
+}
+
+#many-results-alert.visible button:hover,
+#many-results-alert.visible button:focus {
+  text-decoration-style: solid;
+  text-decoration-line: underline;
+  cursor: pointer;
+  outline: none;
+}

@@ -1,0 +1,24 @@
+1. Go to theme's folder /templates/cms/page.tpl and add the following before </section> closing tag:
+{hook h='displayRetailersMap' pageId=$cms.id}
+
+Backlog:
+1. Separate markers table and handling
+2. Allow for different embedding methods (regular hooks, widget...)
+3. Improve Grid Query Builder (use repository perhaps?)
+4. Allow for map changes preview in back office (preview settings can be stored in xml instead of persisting in DB)
+5. Add bulk actions to grid
+6. Bundle assets with webpack
+7. Add filters, search criteria and pagination to grid
+8. Allow configuration (choice) of columns shown in retailers grid
+9. Change active column to toggle in retailers grid
+10. Add RegExp and messages to form field constraints
+11. Separate markers table, display images in grids, add image loader
+12. Check what happens with group field in retailers when a group is deleted
+
+
+ORDEN EN USE
+-Clases del módulo
+-Clases de PrestaShop nuevas (PrestaShop Bundle)
+-Clases de PrestaShop viejas (Configure, Validate)
+-Symfony
+-Doctrine
