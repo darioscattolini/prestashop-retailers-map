@@ -18,8 +18,7 @@ export default class LeafletMap {
   }
 
   setUp() {
-    this.#L.tileLayer(this.#tileLayer.api, this.#tileLayer.options)
-      .addTo(this.#map);
+    this.#L.tileLayer.provider(this.#tileLayer).addTo(this.#map);
     this.#customizeDefaultMarkerIcon();
   }
 

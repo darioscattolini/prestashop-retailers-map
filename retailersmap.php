@@ -96,14 +96,28 @@ class RetailersMap extends Module
 
     public function getData(int $langId): array
     {
-        $path = _PS_BASE_URL_.$this->_path;
+        $settings = $this->getSettings();
         $retailers = $this->getRetailers($langId);
         $groups = $this->getGroups();
 
         return [
-            'path' => $path,
+            'settings' => $settings,
             'retailers' => $retailers,
             'groups' => $groups,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getSettings(): array
+    {
+        return [
+            'mediaPath' => _PS_BASE_URL_ . $this->_path . 'views/',
+            'containerId' => 'retailers-map',
+            'defaultCenter' => [40.36418119493289, -3.7638643864609374],
+            'defaultZoom' => 6,
+            'tileLayer' => 'OpenStreetMap',
         ];
     }
 
