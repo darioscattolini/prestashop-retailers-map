@@ -112,12 +112,13 @@ class RetailersMap extends Module
      */
     private function getSettings(): array
     {
+        $tilesProvider = Settings::getInstance()->getSettings()['tilesProvider'];
         return [
             'mediaPath' => _PS_BASE_URL_ . $this->_path . 'views/',
             'containerId' => 'retailers-map',
             'defaultCenter' => [40.36418119493289, -3.7638643864609374],
             'defaultZoom' => 6,
-            'tileLayer' => 'OpenStreetMap',
+            'tilesProvider' => $tilesProvider,
         ];
     }
 

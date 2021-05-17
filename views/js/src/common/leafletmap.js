@@ -5,7 +5,7 @@ export default class LeafletMap {
   #containerId;
   #defaultCenter;
   #defaultZoom;
-  #tileLayer;
+  #tilesProvider;
   #map;
   #markers = [];
 
@@ -13,12 +13,12 @@ export default class LeafletMap {
     this.#containerId = settings.containerId;
     this.#defaultCenter = settings.defaultCenter;
     this.#defaultZoom = settings.defaultZoom;
-    this.#tileLayer = settings.tileLayer;
+    this.#tilesProvider = settings.tilesProvider;
     this.#map = this.#L.map(this.#containerId);
   }
 
   setUp() {
-    this.#L.tileLayer.provider(this.#tileLayer).addTo(this.#map);
+    this.#L.tileLayer.provider(this.#tilesProvider).addTo(this.#map);
     this.#customizeDefaultMarkerIcon();
   }
 

@@ -13,7 +13,7 @@ class Settings
 
     private $configName = 'RETAILERS_MAP_SETTINGS';
 
-    private $fields = ['cmsPageId', 'mapHeight'];
+    private $fields = ['cmsPageId', 'mapHeight', 'tilesProvider'];
 
     private function __construct()
     {
@@ -125,6 +125,32 @@ class Settings
                 return is_int($value) && $value >= 0;
             case 'mapHeight':
                 return is_int($value) && $value >= 0 && $value <= 1000;
+            case 'tilesProvider':
+                return in_array($value, [
+                    'OpenStreetMap.Mapnik',
+                    'OpenStreetMap.DE',
+                    'OpenStreetMap.CH',
+                    'OpenStreetMap.France',
+                    'OpenStreetMap.HOT',
+                    'OpenStreetMap.BZH',
+                    'Stadia.AlidadeSmooth',
+                    'Stadia.AlidadeSmoothDark',
+                    'Stadia.OSMBright',
+                    'Stadia.Outdoors',
+                    'CyclOSM',
+                    'Stamen.Toner',
+                    'Stamen.TonerBackground',
+                    'Stamen.TonerLife',
+                    'Stamen.Watercolor',
+                    'Esri.WorldStreetMap',
+                    'Esri.DeLorme',
+                    'Esri.WorldTopoMap',
+                    'Esri.WorldImagery',
+                    'CartoDB.Positron',
+                    'CartoDB.Voyager',
+                    'CartoDB.VoyagerLabelsUnder',
+                    'HikeBike.HikeBike',
+                ]);
         }
     }
 }

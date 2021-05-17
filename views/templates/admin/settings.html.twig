@@ -3,6 +3,7 @@
 
 {% set mapHeight = settingsForm.settings.mapHeight %}
 {% set cmsPageId = settingsForm.settings.cmsPageId %}
+{% set tilesProvider = settingsForm.settings.tilesProvider %}
 
 {% block content %}
   {% block settings_form %}
@@ -27,6 +28,12 @@
               cmsPageId, 
               { attr: { value : cmsPageId.vars.value } },
               { label: cmsPageId.vars.label }
+            ) }}
+
+            {{ ps.form_group_row(
+              tilesProvider, 
+              { attr: { value : tilesProvider.vars.value } },
+              { label: tilesProvider.vars.label }
             ) }}
 
             {% block settings_form_rest %}
