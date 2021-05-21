@@ -1,7 +1,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-{% set mapHeight = settingsForm.settings.mapHeight %}
+{% set height = settingsForm.settings.height %}
 {% set cmsPageId = settingsForm.settings.cmsPageId %}
 {% set tilesProvider = settingsForm.settings.tilesProvider %}
 
@@ -19,9 +19,9 @@
             {{ form_errors(settingsForm) }}
             
             {{ ps.form_group_row(
-              mapHeight, 
-              { attr: { value : mapHeight.vars.value } },
-              { label: mapHeight.vars.label }
+              height, 
+              { attr: { value : height.vars.value } },
+              { label: height.vars.label }
             ) }}
 
             {{ ps.form_group_row(
