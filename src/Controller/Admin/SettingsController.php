@@ -10,7 +10,6 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\SubmitButton;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,16 +51,16 @@ class SettingsController extends FrameworkBundleAdminController
     /**
      * @param FormInterface $form
      * 
-     * @return RedirectResponse|void
+     * @return Response
      */
-    private function saveSettings(FormInterface $form): ?RedirectResponse {
-        $data = $form->getData()['settings']; //['settings'] may be added later in the process
+    private function saveSettings(FormInterface $form): Response {
+        $data = $form->getData()['settings'];
 
         $saveErrors = $this
-                ->get(
-                    'prestashop.module.retailers_map.form.form_handler.settings'
-                )
-                ->save($data);
+            ->get(
+                'prestashop.module.retailers_map.form.form_handler.settings'
+            )
+            ->save($data);
 
             if (0 === count($saveErrors)) {
                 $this->addFlash(
@@ -76,17 +75,18 @@ class SettingsController extends FrameworkBundleAdminController
             }
 
             $this->flashErrors($saveErrors);
+
             return $this->renderForm($form);
     }
 
     /**
      * @param FormInterface $form
      * 
-     * @return void
+     * @return Response
      */
-    private function showPreview(FormInterface $form): ?Response {
-        $data = $form->getData()['settings']; //['settings'] may be added later in the process
-        return new Response('preview');
+    private function showPreview(FormInterface $form): Response {
+        $data = $form->getData()['settings'];
+        return new Response(json_encode($data));
     }
 
     /**
