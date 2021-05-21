@@ -4,6 +4,7 @@
 {% set height = settingsForm.settings.height %}
 {% set cmsPageId = settingsForm.settings.cmsPageId %}
 {% set tilesProvider = settingsForm.settings.tilesProvider %}
+{% set pageId = preview ? 'preview' : 'moduleAdmin' %}
 
 {% block content %}
   {% block settings_form %}
@@ -47,6 +48,25 @@
           {% endblock %}
       </div>
     {{ form_end(settingsForm) }}
+  {% endblock %}
+
+  {% block map %}
+    {% if preview %}
+      <p><strong>
+        {{ 
+          'This is just a preview. Press Save button to save data'|
+          trans({}, 'Modules.Retailersmap.Settings') 
+        }}
+      </strong></p>
+    {% endif %}
+
+    {{ renderhook(
+        'displayRetailersMap',
+        {
+          'pageId': pageId,
+          'settings': mapPreviewSettings
+        }
+    ) }}
   {% endblock %}
 {% endblock %}
 

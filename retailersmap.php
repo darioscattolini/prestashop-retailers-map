@@ -84,15 +84,20 @@ class RetailersMap extends Module
     // Modificar toma de datos de front office usando repository
     public function hookDisplayRetailersMap($params)
     {
-        $dbSettings = Settings::getInstance()->getSettings();
-
         $callerPageId = $params['pageId'];
-        $cmsPageId = $dbSettings['cmsPageId'];
 
-        if ($callerPageId === $cmsPageId || $callerPageId === 'moduleAdmin') {
-            unset($dbSettings['cmsPageId']);
+        $rawSettings = $callerPageId === 'preview' 
+            ? $params['settings']
+            : Settings::getInstance()->getSettings();
+        
+        $cmsPageId = $rawSettings['cmsPageId'];
 
-            $settings = $this->transformSettings($dbSettings);
+        $validCallers = [$cmsPageId, 'moduleAdmin', 'preview'];
+
+        if (in_array($callerPageId, $validCallers)) {
+            unset($rawSettings['cmsPageId']);
+
+            $settings = $this->transformSettings($rawSettings);
             
             $this->assignSmartyVariables($settings);
 

@@ -41,11 +41,11 @@ class SettingsController extends FrameworkBundleAdminController
             if ($requestedAction === 'save') {
                 return $this->saveSettings($form);
             } else {
-                return $this->showPreview($form);
+                return $this->renderPage($form, true);
             }
         }
 
-        return $this->renderForm($form);
+        return $this->renderPage($form, false);
     }
 
     /**
@@ -76,7 +76,7 @@ class SettingsController extends FrameworkBundleAdminController
 
             $this->flashErrors($saveErrors);
 
-            return $this->renderForm($form);
+            return $this->renderPage($form, false);
     }
 
     /**
@@ -84,17 +84,9 @@ class SettingsController extends FrameworkBundleAdminController
      * 
      * @return Response
      */
-    private function showPreview(FormInterface $form): Response {
-        $data = $form->getData()['settings'];
-        return new Response(json_encode($data));
-    }
+    private function renderPage(FormInterface $form, bool $preview): Response {
+        $unsavedSettings = $preview ? $form->getData()['settings'] : null;
 
-    /**
-     * @param FormInterface $form
-     * 
-     * @return Response
-     */
-    private function renderForm(FormInterface $form): Response {
         return $this->render(
             '@Modules/retailersmap/views/templates/admin/settings.html.twig',
             [
@@ -103,7 +95,9 @@ class SettingsController extends FrameworkBundleAdminController
                     'Retailers Map', 'Modules.Retailersmap.General'
                 ),
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'settingsForm' => $this->getFormView($form),
+                'preview' => $preview,
+                'mapPreviewSettings' => $unsavedSettings,
+                'settingsForm' => $this->getFormView($form, $unsavedSettings),
             ]
         );
     }
@@ -146,16 +140,22 @@ class SettingsController extends FrameworkBundleAdminController
     /**
      * Sets children FormView values.
      *
+     * @param array|null $unsavedData
+     * 
      * @return FormView
      */
-    private function getFormView(FormInterface $form)
+    private function getFormView(
+        FormInterface $form, ?array $unsavedData
+    ): FormView
     {
         $view = $form->createView();
         $children = $view->children['settings']->children;
 
         foreach ($children as $childName => $child) {
             if ($childName === 'save' || $childName === 'seePreview') continue;
-            $child->vars['value'] = $view->vars['value'][$childName];
+            $child->vars['value'] = $unsavedData
+                ? $unsavedData[$childName]
+                : $view->vars['value'][$childName];
         }
 
         return $view;
