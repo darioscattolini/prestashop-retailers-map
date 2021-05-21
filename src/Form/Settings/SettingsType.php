@@ -26,7 +26,7 @@ class SettingsType extends AbstractType
                     new Assert\NotBlank()
                 ],
             ])
-            ->add('mapHeight', IntegerType::class, [
+            ->add('height', IntegerType::class, [
                 'label' => 'Map height',
                 'help' => 'Map height in pixels (recommended: 470, max: 1000).',
                 'translation_domain' => 'Modules.Retailersmap.Settings',

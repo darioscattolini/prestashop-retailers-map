@@ -13,12 +13,10 @@ class RetailersMapDataModuleFrontController extends ModuleFrontController
 
         $data = $module->getData($langId);
         
-        $settings = $data['settings'];
         $retailers = $data['retailers'];
         $groups = $data['groups'];
 
         $output = [
-            'settings' => $settings,
             'retailers' => $retailers,
             'groups' => $groups,
         ];

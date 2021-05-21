@@ -4,6 +4,7 @@ import SearchEngine from './searchengine';
 
 export default class RetailersMap {
   #mediaPath;
+  #dataLink;
   #map;
   #searchEngine;
   #noResultAlert;
@@ -14,14 +15,20 @@ export default class RetailersMap {
 
   constructor(settings) {
     this.#mediaPath = settings.mediaPath;
+    this.#dataLink = settings.dataLink;
     this.#map = new LeafletMap(settings);
     this.#searchEngine = new SearchEngine();
     this.#noResultAlert = document.getElementById('no-result-alert');
     this.#manyResultsAlert = document.getElementById('many-results-alert');
   }
 
-  async setUp(groups, retailers) {
+  async setUp() {
     this.#map.setUp();
+
+    const mapDataResponse = await fetch(this.#dataLink);
+    const mapData = await mapDataResponse.json();
+    const { groups, retailers } = mapData;
+
     this.#addGroupsData(groups);
     this.#addRetailersData(retailers);
     this.#addSearchButtonFunction();

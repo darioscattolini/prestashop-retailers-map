@@ -14,8 +14,10 @@
     <div id="no-result-alert">{$searchNoResult}</div>
     <div id="many-results-alert">{$searchManyResults}</div>
   </div>
-  <div id="retailers-map" style="height:{$height}px;"></div>
+  <div id="retailers-map"></div>
 </div>
 
-<script>const mapDataLink = "{$mapDataLink}";</script>
+<script>
+  const settings = JSON.parse('{$settings}');
+</script>
 <script src="{$jsLink}"></script>

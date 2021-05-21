@@ -13,7 +13,7 @@ class Settings
 
     private $configName = 'RETAILERS_MAP_SETTINGS';
 
-    private $fields = ['cmsPageId', 'mapHeight', 'tilesProvider'];
+    private $fields = ['cmsPageId', 'height', 'tilesProvider'];
 
     private function __construct()
     {
@@ -123,7 +123,7 @@ class Settings
         switch ($field) {
             case 'cmsPageId':
                 return is_int($value) && $value >= 0;
-            case 'mapHeight':
+            case 'height':
                 return is_int($value) && $value >= 0 && $value <= 1000;
             case 'tilesProvider':
                 return in_array($value, [

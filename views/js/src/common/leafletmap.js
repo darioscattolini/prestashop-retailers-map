@@ -3,6 +3,7 @@ import L from './leafletextension';
 export default class LeafletMap {
   #L = L;
   #containerId;
+  #height;
   #defaultCenter;
   #defaultZoom;
   #tilesProvider;
@@ -11,9 +12,12 @@ export default class LeafletMap {
 
   constructor(settings) {
     this.#containerId = settings.containerId;
+    this.#height = settings.height;
     this.#defaultCenter = settings.defaultCenter;
     this.#defaultZoom = settings.defaultZoom;
     this.#tilesProvider = settings.tilesProvider;
+
+    document.getElementById(this.#containerId).style.height = this.#height;
     this.#map = this.#L.map(this.#containerId);
   }
 

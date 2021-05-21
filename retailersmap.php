@@ -84,11 +84,17 @@ class RetailersMap extends Module
     // Modificar toma de datos de front office usando repository
     public function hookDisplayRetailersMap($params)
     {
+        $dbSettings = Settings::getInstance()->getSettings();
+
         $callerPageId = $params['pageId'];
-        $cmsPageId = Settings::getInstance()->getSettings()['cmsPageId'];
+        $cmsPageId = $dbSettings['cmsPageId'];
 
         if ($callerPageId === $cmsPageId || $callerPageId === 'moduleAdmin') {
-            $this->assignSmartyVariables();
+            unset($dbSettings['cmsPageId']);
+
+            $settings = $this->transformSettings($dbSettings);
+            
+            $this->assignSmartyVariables($settings);
 
             return $this->display(__FILE__, 'retailersmap.tpl');
         }
@@ -96,30 +102,34 @@ class RetailersMap extends Module
 
     public function getData(int $langId): array
     {
-        $settings = $this->getSettings();
         $retailers = $this->getRetailers($langId);
         $groups = $this->getGroups();
 
         return [
-            'settings' => $settings,
             'retailers' => $retailers,
             'groups' => $groups,
         ];
     }
 
     /**
-     * @return array
+     * @return string
      */
-    private function getSettings(): array
-    {
-        $tilesProvider = Settings::getInstance()->getSettings()['tilesProvider'];
-        return [
-            'mediaPath' => _PS_BASE_URL_ . $this->_path . 'views/',
-            'containerId' => 'retailers-map',
-            'defaultCenter' => [40.36418119493289, -3.7638643864609374],
-            'defaultZoom' => 6,
-            'tilesProvider' => $tilesProvider,
-        ];
+    private function transformSettings($settings): string
+    {   
+        $settings['height'] = strval($settings['height']) . 'px';
+        $dataLink = (new Link())->getModuleLink(
+            'retailersmap',
+            'data',
+            ['ajax' => true]
+        );
+
+        $settings['mediaPath'] = _PS_BASE_URL_ . $this->_path . 'views/';
+        $settings['containerId'] = 'retailers-map';
+        $settings['defaultCenter'] = [40.36418119493289, -3.7638643864609374];
+        $settings['defaultZoom'] = 6;
+        $settings['dataLink'] = $dataLink;
+
+        return json_encode($settings);
     }
 
     /**
@@ -243,16 +253,14 @@ class RetailersMap extends Module
         return $installer;
     }
 
-    /** @return array */
-    private function assignSmartyVariables()
+    /** 
+     * @param string $settings
+     * 
+     * @return array 
+     */
+    private function assignSmartyVariables(string $settings)
     {
-        $mapHeight = Settings::getInstance()->getSettings()['mapHeight'];
         $jsLink = $this->_path.'views/js/dist/common.bundle.js';
-        $mapDataLink = (new Link())->getModuleLink(
-            'retailersmap',
-            'data',
-            ['ajax' => true]
-        );
         $stylesheetLink = $this->_path.'views/css/retailersmap.css';
         $searchPlaceholder = $this->trans(
             'Search by city or postcode',
@@ -271,9 +279,8 @@ class RetailersMap extends Module
         );
 
         $this->context->smarty->assign([
-            'height' => $mapHeight,
+            'settings' => $settings,
             'jsLink' => $jsLink,
-            'mapDataLink' => $mapDataLink,
             'stylesheetLink' => $stylesheetLink,
             'searchPlaceholder' => $searchPlaceholder,
             'searchNoResult' => $searchNoResult,
