@@ -7,6 +7,7 @@ namespace PrestaShop\Module\RetailersMap\Form\Settings;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -40,6 +41,16 @@ class SettingsType extends AbstractType
                 'translation_domain' => 'Modules.Retailersmap.Settings',
                 'choices' => $this->getTilesProviderChoices(),
                 'constraints' => [new Assert\NotBlank()],
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Save',
+                'translation_domain' => 'Admin.Actions',
+                'attr' => ['class' => 'btn btn-primary ml-3']
+            ])
+            ->add('seePreview', SubmitType::class, [
+                'label' => 'See preview',
+                'translation_domain' => 'Modules.Retailersmap.Settings',
+                'attr' => ['class' => 'btn btn-primary ml-3']
             ]);
     }
 

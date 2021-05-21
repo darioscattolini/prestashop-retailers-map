@@ -35,18 +35,16 @@
               { attr: { value : tilesProvider.vars.value } },
               { label: tilesProvider.vars.label }
             ) }}
-
-            {% block settings_form_rest %}
-              {{ form_rest(settingsForm) }}
-            {% endblock %}
           </div>
         </div>
         
-        <div class="card-footer clearfix">
-          <button class="btn btn-primary float-right">
-            {{ 'Save'|trans({}, 'Admin.Actions') }}
-          </button>
-        </div>
+        
+          {% block settings_form_buttons %}
+            <div class="card-footer text-right">
+              {{ form_widget(settingsForm.settings.seePreview) }}
+              {{ form_widget(settingsForm.settings.save) }}
+            </div>
+          {% endblock %}
       </div>
     {{ form_end(settingsForm) }}
   {% endblock %}

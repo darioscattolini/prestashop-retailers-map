@@ -6,8 +6,11 @@ namespace PrestaShop\Module\RetailersMap\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\SubmitButton;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +21,7 @@ class SettingsController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         /**
          * @var FormHandler
@@ -26,12 +29,35 @@ class SettingsController extends FrameworkBundleAdminController
         $formHandler = $this->get(
             'prestashop.module.retailers_map.form.form_handler.settings'
         );
+
+        /** @var Form $form */
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            $data = $form->getData()['settings']; //['settings'] may be added later in the process
-            $saveErrors = $this
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var SubmitButton $clickedButton */
+            $clickedButton = $form->getClickedButton();
+            $requestedAction = $clickedButton->getName();
+
+            if ($requestedAction === 'save') {
+                return $this->saveSettings($form);
+            } else {
+                return $this->showPreview($form);
+            }
+        }
+
+        return $this->renderForm($form);
+    }
+
+    /**
+     * @param FormInterface $form
+     * 
+     * @return RedirectResponse|void
+     */
+    private function saveSettings(FormInterface $form): ?RedirectResponse {
+        $data = $form->getData()['settings']; //['settings'] may be added later in the process
+
+        $saveErrors = $this
                 ->get(
                     'prestashop.module.retailers_map.form.form_handler.settings'
                 )
@@ -50,8 +76,25 @@ class SettingsController extends FrameworkBundleAdminController
             }
 
             $this->flashErrors($saveErrors);
-        }
+            return $this->renderForm($form);
+    }
 
+    /**
+     * @param FormInterface $form
+     * 
+     * @return void
+     */
+    private function showPreview(FormInterface $form): ?Response {
+        $data = $form->getData()['settings']; //['settings'] may be added later in the process
+        return new Response('preview');
+    }
+
+    /**
+     * @param FormInterface $form
+     * 
+     * @return Response
+     */
+    private function renderForm(FormInterface $form): Response {
         return $this->render(
             '@Modules/retailersmap/views/templates/admin/settings.html.twig',
             [
@@ -111,6 +154,7 @@ class SettingsController extends FrameworkBundleAdminController
         $children = $view->children['settings']->children;
 
         foreach ($children as $childName => $child) {
+            if ($childName === 'save' || $childName === 'seePreview') continue;
             $child->vars['value'] = $view->vars['value'][$childName];
         }
 
