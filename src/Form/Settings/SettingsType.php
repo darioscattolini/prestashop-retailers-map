@@ -38,6 +38,7 @@ class SettingsType extends AbstractType
             ])
             ->add('tilesProvider', ChoiceType::class, [
                 'label' => 'Tiles provider',
+                'help' => 'Provider of geographical content of map. They may have different map styles, languages and response times.',
                 'translation_domain' => 'Modules.Retailersmap.Settings',
                 'choices' => $this->getTilesProviderChoices(),
                 'constraints' => [new Assert\NotBlank()],
