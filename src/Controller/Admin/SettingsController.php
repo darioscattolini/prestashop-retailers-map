@@ -86,6 +86,10 @@ class SettingsController extends FrameworkBundleAdminController
      */
     private function renderPage(FormInterface $form, bool $preview): Response {
         $unsavedSettings = $preview ? $form->getData()['settings'] : null;
+        $saveAdvice = $this->trans(
+            'If the map already appears in front office and you are testing changes, you should click "See preview" to see changes before saving them and showing them to users.',
+            'Modules.Retailersmap.Settings'
+        );
 
         return $this->render(
             '@Modules/retailersmap/views/templates/admin/settings.html.twig',
@@ -98,6 +102,7 @@ class SettingsController extends FrameworkBundleAdminController
                 'preview' => $preview,
                 'mapPreviewSettings' => $unsavedSettings,
                 'settingsForm' => $this->getFormView($form, $unsavedSettings),
+                'saveAdvice' => $saveAdvice
             ]
         );
     }
