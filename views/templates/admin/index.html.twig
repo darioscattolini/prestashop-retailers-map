@@ -1,7 +1,12 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {{ renderhook('displayRetailersMap', {'pageId': 'moduleAdmin'}) }}
+  <div>
+    <h2>{{ 'Map preview'|trans({}, 'Modules.Retailersmap.General') }}</h2>
+    <div class="p-5">
+      {{ renderhook('displayRetailersMap', {'pageId': 'moduleAdmin'}) }}
+    </div>
+  </div>
 {% endblock %}
 
 {% block javascripts %}
