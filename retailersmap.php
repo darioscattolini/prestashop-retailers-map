@@ -282,6 +282,11 @@ class RetailersMap extends Module
             [],
             'Modules.Retailersmap.Shop'
         );
+        $mapError = $this->trans(
+            'Map could not be built. Details can be found in browser console.',
+            [],
+            'Modules.Retailersmap.Shop'
+        );
 
         $this->context->smarty->assign([
             'settings' => $settings,
@@ -290,6 +295,7 @@ class RetailersMap extends Module
             'searchPlaceholder' => $searchPlaceholder,
             'searchNoResult' => $searchNoResult,
             'searchManyResults' => $searchManyResults,
+            'mapError' => $mapError,
         ]);
     }
 }

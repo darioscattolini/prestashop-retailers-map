@@ -15,6 +15,7 @@
     <div id="many-results-alert">{$searchManyResults}</div>
   </div>
   <div id="retailers-map"></div>
+  <div id="map-error" style="display:none;">{$mapError}</div>
 </div>
 
 <script>
