@@ -11,6 +11,7 @@ export default class LeafletMap {
   #markers = [];
 
   constructor(settings) {
+    this.#validateSettings(settings);
     this.#containerId = settings.containerId;
     this.#height = settings.height;
     this.#defaultCenter = settings.defaultCenter;
@@ -56,6 +57,13 @@ export default class LeafletMap {
   
   flyToCity(coordinates) {
     this.#map.flyTo(coordinates, 13);
+  }
+
+  #validateSettings(settings) {
+    let errors = '';
+    if (!settings.height) errors += 'Add a value for map height. '
+    if (!settings.tilesProvider) errors += 'Choose a tiles provider. '
+    if (errors !== '') throw new Error('Settings error: ' + errors);
   }
 
   #getUserPosition() {
