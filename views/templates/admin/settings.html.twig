@@ -8,13 +8,26 @@
 
 {% block content %}
   {% block settings_form %}
-    {{ form_start(settingsForm) }}
-      <div class="card">
-        <h3 class="card-header">
-          <i class="material-icons">settings</i>
-            {{ 'Settings'|trans({}, 'Modules.Retailersmap.Settings') }}
-        </h3>
-        
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">settings</i>
+          {{ 'Settings'|trans({}, 'Modules.Retailersmap.Settings') }}
+      </h3>
+
+      {{ form_start(settingsForm) }}    
+        <div class="card-block row">
+          <div class="card-text">
+            <p>{{
+              "Currently maps are intended to be displayed on CMS pages.
+              This requires modifying the template for CMS pages in your theme.
+              Go to your theme's folder, and access /templates/cms/page.tpl.
+              Add the following hook call before the </section> closing tag:
+              "|trans({}, 'Modules.Retailersmap.Settings')          
+            }}</p>
+            <p><pre>{hook h='displayRetailersMap' pageId=$cms.id}</pre></p>
+          </div>
+        </div>
+
         <div class="card-block row">
           <div class="card-text">
             {{ form_errors(settingsForm) }}
@@ -39,16 +52,15 @@
           </div>
         </div>
         
-        
-          {% block settings_form_buttons %}
-            <div class="card-footer text-right">
-              {{ form_widget(settingsForm.settings.seePreview) }}
-              {{ form_widget(settingsForm.settings.save) }}
-              <div><small>{{ saveAdvice }}</small></div>
-            </div>
-          {% endblock %}
-      </div>
-    {{ form_end(settingsForm) }}
+        {% block settings_form_buttons %}
+          <div class="card-footer text-right">
+            {{ form_widget(settingsForm.settings.seePreview) }}
+            {{ form_widget(settingsForm.settings.save) }}
+            <div><small>{{ saveAdvice }}</small></div>
+          </div>
+        {% endblock %}
+      {{ form_end(settingsForm) }}
+    </div>
   {% endblock %}
 
   {% block map %}
