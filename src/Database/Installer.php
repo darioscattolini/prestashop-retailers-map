@@ -48,7 +48,10 @@ class Installer
 
         $retailerInstallFile = __DIR__.'/../../Resources/data/retailer.sql';
         $groupInstallFile = __DIR__.'/../../Resources/data/group.sql';
-        $queryFiles = [$retailerInstallFile, $groupInstallFile];
+        $markerInstallFile = __DIR__.'/../../Resources/data/marker.sql';
+        $queryFiles = [
+            $retailerInstallFile, $groupInstallFile, $markerInstallFile
+        ];
 
         foreach ($queryFiles as $file) {
             $content = file_get_contents($file);
@@ -84,7 +87,9 @@ class Installer
     public function dropTables()
     {
         $errors = [];
-        $tableNames = ['retailersmap_retailer', 'retailersmap_group',];
+        $tableNames = [
+            'retailersmap_retailer', 'retailersmap_group', 'retailersmap_marker'
+        ];
 
         foreach ($tableNames as $tableName) {
             $sql = 'DROP TABLE IF EXISTS '.$this->dbPrefix.$tableName;

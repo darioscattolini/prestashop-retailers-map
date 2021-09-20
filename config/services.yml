@@ -14,6 +14,7 @@ parameters:
     name: 'marker'
     icon: 'edit_location_alt'
     route: 'ps_retailersmap_marker'
+  icon_dir: 'views/img/'
 
 services:
   _defaults:
@@ -33,8 +34,7 @@ services:
       - '@=service("form.factory").createBuilder()'
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.module.retailers_map.form.data_provider.settings'
-      -
-        'settings': 'PrestaShop\Module\RetailersMap\Form\Settings\SettingsType'   #maybe could be added here as service
+      - 'settings': 'PrestaShop\Module\RetailersMap\Form\Settings\SettingsType'   #maybe could be added here as service
       - 'AdministrationPage'                                                      #check
 
   # Groups
@@ -123,6 +123,41 @@ services:
     arguments:
       - '@prestashop.module.retailers_map.form.identifiable_object.retailer.data_handler'
 
+  # Markers
+  prestashop.module.retailers_map.form.marker.type:
+    class: 'PrestaShop\Module\RetailersMap\Form\Marker\MarkerType'
+    public: true
+    tags:
+      - { name: form.type }
+
+  prestashop.module.retailers_map.form.marker.icon_file_manager:
+    class: 'PrestaShop\Module\RetailersMap\Form\Marker\MarkerIconFileManager'
+    arguments: 
+      - '%icon_dir%'
+  
+  prestashop.module.retailers_map.form.identifiable_object.marker.data_provider:
+    class: 'PrestaShop\Module\RetailersMap\Form\Marker\MarkerFormDataProvider'
+    arguments: 
+      - '@doctrine.orm.default_entity_manager'
+
+  prestashop.module.retailers_map.form.identifiable_object.marker.data_handler:
+    class: 'PrestaShop\Module\RetailersMap\Form\Marker\MarkerFormDataHandler'
+    arguments: 
+      - '@doctrine.orm.default_entity_manager'
+      - '@prestashop.module.retailers_map.form.marker.icon_file_manager'
+  
+  prestashop.module.retailers_map.form.identifiable_object.marker.form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShop\Module\RetailersMap\Form\Marker\MarkerType'
+      - '@prestashop.module.retailers_map.form.identifiable_object.marker.data_provider'
+
+  prestashop.module.retailers_map.form.identifiable_object.marker.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.module.retailers_map.form.identifiable_object.marker.data_handler'
 
   # GRID SERVICES
   ##############################################################################
@@ -188,7 +223,40 @@ services:
       - '@prestashop.module.retailers_map.grid.retailer.data_provider' 
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
-      
+  
+  # Markers
+  prestashop.module.retailers_map.grid.marker.definition_factory:
+    class: 'PrestaShop\Module\RetailersMap\Grid\Marker\MarkerGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true
+
+  prestashop.module.retailers_map.grid.marker.query_builder:
+    class: 'PrestaShop\Module\RetailersMap\Grid\Marker\MarkerQueryBuilder'
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+    
+  prestashop.module.retailers_map.grid.marker.data_provider:
+    class: 'PrestaShop\Module\RetailersMap\Grid\Marker\MarkerGridDataFactory'
+    arguments:
+      - '@prestashop.module.retailers_map.grid.marker.query_builder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'marker'
+    calls:
+      - method: setIconDir
+        arguments:
+          - '%icon_dir%'
+
+  prestashop.module.retailers_map.grid.marker.grid_factory:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.module.retailers_map.grid.marker.definition_factory'
+      - '@prestashop.module.retailers_map.grid.marker.data_provider' 
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
   # CONTROLLERS
   ##############################################################################
 
@@ -220,18 +288,12 @@ services:
   prestashop.module.retailers_map.controller.admin.marker:
     class: PrestaShop\Module\RetailersMap\Controller\Admin\CRUDController
     arguments:
-      - '%page_data.group%'
-      - '@prestashop.module.retailers_map.repository.group_repository'
-      - '@prestashop.module.retailers_map.grid.group.grid_factory'
-      - '@prestashop.module.retailers_map.form.identifiable_object.group.form_builder'
-      - '@prestashop.module.retailers_map.form.identifiable_object.group.form_handler'
+      - '%page_data.marker%'
+      - '@prestashop.module.retailers_map.repository.marker_repository'
+      - '@prestashop.module.retailers_map.grid.marker.grid_factory'
+      - '@prestashop.module.retailers_map.form.identifiable_object.marker.form_builder'
+      - '@prestashop.module.retailers_map.form.identifiable_object.marker.form_handler'
       - '@prestashop.module.retailers_map.toolbar.data_provider'
-      #- '%page_data.marker%'
-      #- '@prestashop.module.retailers_map.repository.marker_repository'
-      #- '@prestashop.module.retailers_map.grid.factory.markers'
-      #- '@prestashop.module.retailers_map.form.identifiable_object.builder.marker_form_builder'
-      #- '@prestashop.module.retailers_map.form.identifiable_object.handler.marker_form_handler'
-      #- '@prestashop.module.retailers_map.toolbar.data_provider'
 
   # OTHER SERVICES
   ##############################################################################

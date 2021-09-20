@@ -93,6 +93,34 @@ ps_retailersmap_marker:
   path: /retailers-map/markers
   methods: [GET]
   defaults:
-    _controller: 'prestashop.module.retailers_map.controller.admin.retailer:indexAction'  #cambiar retailer por marker
+    _controller: 'prestashop.module.retailers_map.controller.admin.marker:indexAction'
     _legacy_controller: 'AdminRetailersmapMarkers'
     _legacy_link: 'AdminRetailersmapMarkers'
+
+ps_retailersmap_marker_create:
+  path: /retailers-map/markers/new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'prestashop.module.retailers_map.controller.admin.marker:createAction'
+    _legacy_controller: 'AdminRetailersmapMarkers'
+    _legacy_link: 'AdminRetailersmapMarkers:add'
+
+ps_retailersmap_marker_edit:
+  path: /retailers-map/markers/{itemId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'prestashop.module.retailers_map.controller.admin.marker:editAction'
+    _legacy_controller: 'AdminRetailersmapMarkers'
+    _legacy_link: 'AdminRetailersmapMarkers:update'
+  requirements:
+    itemId: \d+  #por que?
+
+ps_retailersmap_marker_delete:
+  path: /retailers-map/markers/{itemId}/delete
+  methods: [POST]
+  defaults:
+    _controller: 'prestashop.module.retailers_map.controller.admin.marker:deleteAction'
+    _legacy_controller: 'AdminRetailersmapMarkers'
+    _legacy_link: 'AdminRetailersmapMarkers:delete'
+  requirements:
+    itemId: \d+  #por que?
