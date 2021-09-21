@@ -29,7 +29,7 @@ class GroupFormDataHandler implements FormDataHandlerInterface
         $group = new Group();
         $group
             ->setName($data['name'])
-            ->setMarker($data['marker'])
+            ->setMarker($this->getMarker($data['id_marker']))
             ->setStackOrder($data['stackOrder']);
 
         $this->entityManager->persist($group);

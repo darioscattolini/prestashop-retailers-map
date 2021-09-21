@@ -83,7 +83,7 @@ class RetailersmapGroup
     /**
      * @return $this
      */
-    public function setMarker(RetailersmapMarker $marker)/*: self */
+    public function setMarker(?RetailersmapMarker $marker)/*: self */
     {
         $this->marker = $marker;
 
