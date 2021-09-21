@@ -9,6 +9,7 @@ export default class LeafletMap {
   #tilesProvider;
   #map;
   #markers = [];
+  #icons = [];
 
   constructor(settings) {
     this.#containerId = settings.containerId;
@@ -26,11 +27,24 @@ export default class LeafletMap {
     this.#customizeDefaultMarkerIcon();
   }
 
-  buildIcon(data) {
-    return this.#L.icon(data);
+  buildMarkerIcons(markers) {
+    for (const marker of markers) {
+      const icon = {
+        markerId: marker.id,
+        icon: this.#L.icon(marker)
+      };
+
+      this.#icons.push(icon);
+    }
   }
 
-  addRetailerMarker(retailerData, options) {
+  addRetailerMarker(retailerData, markerId, stackOrder) {
+    const options = { };
+    if (markerId) {
+      options.icon = this.#icons.find(icon => icon.markerId === markerId).icon;
+    }
+    if (stackOrder > 0) options.zIndexOffset = 10 * stackOrder;
+
     const marker = this.#L.marker(retailerData.coordinates, options);
     marker.bindTooltip(retailerData.name).openTooltip();
     marker.bindPopup(retailerData.popupContent).openPopup();

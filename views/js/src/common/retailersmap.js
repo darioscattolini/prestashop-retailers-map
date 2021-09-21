@@ -3,7 +3,6 @@ import RetailersGroup from './retailersgroup';
 import SearchEngine from './searchengine';
 
 export default class RetailersMap {
-  #mediaPath;
   #dataLink;
   #map;
   #searchEngine;
@@ -14,7 +13,6 @@ export default class RetailersMap {
   #groups = [];
 
   constructor(settings) {
-    this.#mediaPath = settings.mediaPath;
     this.#dataLink = settings.dataLink;
     this.#map = new LeafletMap(settings);
     this.#searchEngine = new SearchEngine();
@@ -27,8 +25,9 @@ export default class RetailersMap {
 
     const mapDataResponse = await fetch(this.#dataLink);
     const mapData = await mapDataResponse.json();
-    const { groups, retailers } = mapData;
+    const { groups, retailers, markers } = mapData;
 
+    this.#map.buildMarkerIcons(markers);
     this.#addGroupsData(groups);
     this.#addRetailersData(retailers);
     this.#addSearchButtonFunction();
@@ -38,9 +37,8 @@ export default class RetailersMap {
 
   #addGroupsData(groups) {
     for (const group of groups) {
-      const groupObj = new RetailersGroup(
-        group.id, group.marker, group.retinaMarker, group.stackOrder
-      );
+      const { id, stackOrder } = group;
+      const groupObj = new RetailersGroup(id, stackOrder);
       this.#groups.push(groupObj);
     }
   }
@@ -58,7 +56,6 @@ export default class RetailersMap {
       .addEventListener('submit', event => {
         this.#emptySearchAlerts()
         
-
         const input = event.target[0].value;
         const foundLocations = this.#searchEngine.searchCityOrPostcode(input);
         
@@ -86,29 +83,20 @@ export default class RetailersMap {
 
   #fillMap() {
     for (const group of this.#groups) {
-      const options = {};
-      
-      if (group.hasIcon()) {
-        const data = group.getIconData(this.#mediaPath);
-        // this could be done from inside #map passing only data as options
-        // but as it is it would rebuild same icon for every retailer
-        options.icon = this.#map.buildIcon(data);
-      }
-
       const stackOrder = group.getStackOrder();
-      if (stackOrder > 0) options.zIndexOffset = 10 * stackOrder;
 
       for (const retailer of group.getMembers()) {
+        const markerId = retailer.markerId;
+
         const retailerData = {};
         
         retailerData.coordinates = [
           Number(retailer.latitude), Number(retailer.longitude) 
         ];
-
         retailerData.name = retailer.name;
         retailerData.popupContent = this.#getPopupContentFor(retailer);
         
-        this.#map.addRetailerMarker(retailerData, options);
+        this.#map.addRetailerMarker(retailerData, markerId, stackOrder);
       }
     }
   }
