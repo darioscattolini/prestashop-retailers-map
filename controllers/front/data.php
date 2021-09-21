@@ -15,10 +15,12 @@ class RetailersMapDataModuleFrontController extends ModuleFrontController
         
         $retailers = $data['retailers'];
         $groups = $data['groups'];
+        $markers = $data['markers'];
 
         $output = [
             'retailers' => $retailers,
             'groups' => $groups,
+            'markers' => $markers
         ];
 
         header('Content-Type: application/json');

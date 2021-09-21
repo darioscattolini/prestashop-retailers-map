@@ -30,18 +30,12 @@ class RetailersmapGroup
     private $name;
 
     /**
-     * @var string
+     * @var RetailersmapMarker
      *
-     * @ORM\Column(name="group_marker", type="string", length=255, nullable=TRUE)
-     */
-    private $groupMarker;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="group_retina_marker", type="string", length=255, nullable=TRUE)
-     */
-    private $groupRetinaMarker;
+     * @ORM\OneToOne(targetEntity="RetailersmapMarker")
+     * @ORM\JoinColumn(name="id_marker", referencedColumnName="id_marker", nullable=TRUE)
+     **/
+    private $marker;
 
     /**
      * @var int
@@ -79,37 +73,19 @@ class RetailersmapGroup
     }
 
     /**
-     * @return string|null
+     * @return RetailersmapMarker|null
      */
-    public function getGroupMarker()/* : ?string */
+    public function getMarker()/*: ?RetailersmapMarker */
     {
-        return $this->groupMarker;
+        return $this->marker;
     }
 
     /**
      * @return $this
      */
-    public function setGroupMarker(?string $marker)/* : self */
+    public function setMarker(RetailersmapMarker $marker)/*: self */
     {
-        $this->groupMarker = $marker;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getGroupRetinaMarker()/* : ?string */
-    {
-        return $this->groupRetinaMarker;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setGroupRetinaMarker(?string $marker)/* : self */
-    {
-        $this->groupRetinaMarker = $marker;
+        $this->marker = $marker;
 
         return $this;
     }
@@ -139,8 +115,7 @@ class RetailersmapGroup
     {
         return [
             'name' => $this->getName(),
-            'groupMarker' => $this->getGroupMarker(),
-            'groupRetinaMarker' => $this->getGroupRetinaMarker(),
+            'marker' => $this->getMarker(),
             'stackOrder' => $this->getStackOrder(),
         ];
     }

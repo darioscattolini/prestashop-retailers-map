@@ -101,18 +101,12 @@ class RetailersmapRetailer
     private $group;
 
     /**
-     * @var string
+     * @var RetailersmapMarker
      *
-     * @ORM\Column(name="singular_marker", type="string", length=255, options={"default":NULL}, nullable=TRUE)
-     */
-    private $singularMarker;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="singular_retina_marker", type="string", length=255, options={"default":NULL}, nullable=TRUE)
-     */
-    private $singularRetinaMarker;
+     * @ORM\OneToOne(targetEntity="RetailersmapMarker")
+     * @ORM\JoinColumn(name="id_marker", referencedColumnName="id_marker", nullable=TRUE)
+     **/
+    private $marker;
 
     /**
      * @var boolean
@@ -328,37 +322,19 @@ class RetailersmapRetailer
     }
 
     /**
-     * @return string|null
+     * @return RetailersmapMarker|null
      */
-    public function getSingularMarker(): ?string
+    public function getMarker(): ?RetailersmapMarker
     {
-        return $this->singularMarker;
+        return $this->marker;
     }
 
     /**
      * @return $this
      */
-    public function setSingularMarker(?string $marker): self
+    public function setMarker(RetailersmapMarker $marker): self
     {
-        $this->singularMarker = $marker;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getSingularRetinaMarker(): ?string
-    {
-        return $this->singularRetinaMarker;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setSingularRetinaMarker(?string $marker): self
-    {
-        $this->singularRetinaMarker = $marker;
+        $this->marker = $marker;
 
         return $this;
     }
@@ -398,8 +374,7 @@ class RetailersmapRetailer
             'phone' => $this->getPhone(),
             'email' => $this->getEmail(),
             'group' => $this->getGroup(),
-            'singularMarker' => $this->getSingularMarker(),
-            'singularRetinaMarker' => $this->getSingularRetinaMarker(),
+            'marker' => $this->getMarker(),
             'active' => $this->getActive(),
         ];
     }

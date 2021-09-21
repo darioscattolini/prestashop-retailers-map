@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\Module\RetailersMap\Database\Installer;
 use PrestaShop\Module\RetailersMap\Database\Settings;
 use PrestaShop\Module\RetailersMap\Entity\RetailersmapGroup as Group;
+use PrestaShop\Module\RetailersMap\Entity\RetailersmapMarker as Marker;
 use PrestaShop\Module\RetailersMap\Entity\RetailersmapRetailer as Retailer;
 use PrestaShop\PrestaShop\Adapter\Entity\Country;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
@@ -109,32 +110,13 @@ class RetailersMap extends Module
     {
         $retailers = $this->getRetailers($langId);
         $groups = $this->getGroups();
+        $markers = $this->getMarkers();
 
         return [
             'retailers' => $retailers,
             'groups' => $groups,
+            'markers' => $markers
         ];
-    }
-
-    /**
-     * @return string
-     */
-    private function transformSettings($settings): string
-    {   
-        $settings['height'] = strval($settings['height']) . 'px';
-        $dataLink = (new Link())->getModuleLink(
-            'retailersmap',
-            'data',
-            ['ajax' => true]
-        );
-
-        $settings['mediaPath'] = _PS_BASE_URL_ . $this->_path . 'views/';
-        $settings['containerId'] = 'retailers-map';
-        $settings['defaultCenter'] = [40.36418119493289, -3.7638643864609374];
-        $settings['defaultZoom'] = 6;
-        $settings['dataLink'] = $dataLink;
-
-        return json_encode($settings);
     }
 
     /**
@@ -151,7 +133,8 @@ class RetailersMap extends Module
         $processedRetailers = array_map(function (Retailer $ret) use ($langId) {
             $country = Country::getNameById($langId, $ret->getIdCountry());
             $state = State::getNameById($ret->getIdState());
-            $group = $ret->getGroup()->getId();
+            $group = $ret->getGroup();
+            $marker = $ret->getMarker() ?? $ret->getGroup()->getMarker();
 
             return [
                 'name' => $ret->getName(),
@@ -164,9 +147,8 @@ class RetailersMap extends Module
                 'longitude' => $ret->getLongitude(),
                 'phone' => $ret->getPhone(),
                 'email' => $ret->getEmail(),
-                'group' => $group,
-                'singularMarker' => $ret->getSingularMarker(),
-                'singularRetinaMarker' => $ret->getSingularRetinaMarker(),
+                'group' => $group->getId(),
+                'markerId' => $marker ? $marker->getId() : null
             ];
         }, $retailers);
 
@@ -187,13 +169,72 @@ class RetailersMap extends Module
         $processedGroups = array_map(function (Group $group) {
             return [
                 'id' => $group->getId(),
-                'marker' => $group->getGroupMarker(),
-                'retinaMarker' => $group->getGroupRetinaMarker(),
                 'stackOrder' => $group->getStackOrder(),
             ];
         }, $groups);
 
         return $processedGroups;
+    }
+
+    /**
+     * @return array
+     */
+    private function getMarkers(): array
+    {
+        /** @var EntityManagerInterface */
+        $entityManager = $this->get('doctrine.orm.default_entity_manager');
+
+        $repository = $entityManager->getRepository(Marker::class);
+        $markers = $repository->findAll();
+
+        $processedMarkers = array_map(function (Marker $marker) {
+            $_ICON_DIR_ = _PS_BASE_URL_ . $this->_path . '/views/img/';
+
+            $iconSize = array($marker->getIconWidth(), $marker->getIconHeight());
+            $iconAnchor = array($marker->getAnchorX(), $marker->getAnchorY());
+            
+            // Currently non configurable:
+            $popupAnchor = array(1, -34);
+            $shadowSize = array(41, 41);
+            $shadowUrl = $_ICON_DIR_ . 'marker-shadow.png';
+            $shadowAnchor = array(12, 41);
+            $tooltipAnchor = array(16, -28);
+
+            return [
+                'id' => $marker->getId(),
+                'iconUrl' => $_ICON_DIR_ . $marker->getFileNameDefault(),
+                'retinaMarker' => $_ICON_DIR_ . $marker->getFileNameRetina(),
+                'iconSize' => $iconSize,
+                'iconAnchor' => $iconAnchor,
+                'popupAnchor' => $popupAnchor,
+                'shadowSize' => $shadowSize,
+                'shadowUrl' => $shadowUrl,
+                'shadowAnchor' => $shadowAnchor,
+                'tooltipAnchor' => $tooltipAnchor,
+            ];
+        }, $markers);
+
+        return $processedMarkers;
+    }
+
+    /**
+     * @return string
+     */
+    private function transformSettings($settings): string
+    {   
+        $settings['height'] = strval($settings['height']) . 'px';
+        $dataLink = (new Link())->getModuleLink(
+            'retailersmap',
+            'data',
+            ['ajax' => true]
+        );
+
+        $settings['containerId'] = 'retailers-map';
+        $settings['defaultCenter'] = [40.36418119493289, -3.7638643864609374];
+        $settings['defaultZoom'] = 6;
+        $settings['dataLink'] = $dataLink;
+
+        return json_encode($settings);
     }
 
     /**

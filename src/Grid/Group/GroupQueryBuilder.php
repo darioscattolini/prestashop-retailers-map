@@ -34,10 +34,14 @@ final class GroupQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(
         SearchCriteriaInterface $searchCriteria
     ) {
+        $pr = $this->dbPrefix;
+
         return $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix.'retailersmap_group', 'rg')
-            ->select('*');
+            ->select('g.*')
+            ->addSelect('m.name AS marker_name')
+            ->from($pr . 'retailersmap_group', 'g')
+            ->leftJoin('g', $pr.'retailersmap_marker', 'm', 'g.id_marker = m.id_marker');
     }
 
     /**

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\RetailersMap\Form\Group;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,6 +14,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class GroupType extends AbstractType
 {
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $markersChoiceProvider;
+
+    public function __construct(
+        FormChoiceProviderInterface $markersChoiceProvider
+    )
+    {
+        $this->markersChoiceProvider = $markersChoiceProvider;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -27,19 +41,13 @@ class GroupType extends AbstractType
                     new Assert\NotBlank(),
                 ],
             ])
-            ->add('groupMarker', TextType::class, [       //this will be separated
-                'label' => 'Default group marker',
-                'help' => 'Name of group marker icon file',
-                'translation_domain' => 'Modules.Retailersmap.Group',
+            ->add('id_marker', ChoiceType::class, [
+                'label' => 'Marker',
+                'translation_domain' => 'Modules.Retailersmap.Retailer',
+                'help' => 'Specify a marker icon for all group members. ' .
+                    'It can be overriden for particular retailers.',
                 'required' => false,
-                'attr' => ['maxlength' => '255'],
-            ])
-            ->add('groupRetinaMarker', TextType::class, [       //this will be separated
-                'label' => 'Retina group marker',
-                'help' => 'Name of high resolution marker icon file',
-                'translation_domain' => 'Modules.Retailersmap.Group',
-                'required' => false,
-                'attr' => ['maxlength' => '255'],
+                'choices' => $this->markersChoiceProvider->getChoices()
             ])
             ->add('stackOrder', IntegerType::class, [
                 'label' => 'Stack order',

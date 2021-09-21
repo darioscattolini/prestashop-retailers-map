@@ -42,8 +42,6 @@ class GroupFormDataProvider implements FormDataProviderInterface
     {
         return [
             'name' => '',
-            'groupMarker' => '',
-            'groupRetinaMarker' => '',
             'stackOrder' => 0,
         ];
     }

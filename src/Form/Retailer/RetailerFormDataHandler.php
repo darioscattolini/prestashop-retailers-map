@@ -6,6 +6,7 @@ namespace PrestaShop\Module\RetailersMap\Form\Retailer;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\Module\RetailersMap\Entity\RetailersmapGroup as Group;
+use PrestaShop\Module\RetailersMap\Entity\RetailersmapMarker as Marker;
 use PrestaShop\Module\RetailersMap\Entity\RetailersmapRetailer as Retailer;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 
@@ -42,8 +43,7 @@ class RetailerFormDataHandler implements FormDataHandlerInterface
             ->setPhone($data['phone'])
             ->setEmail($data['email'])
             ->setGroup($data['group'])
-            ->setSingularMarker($data['singularMarker'])
-            ->setSingularRetinaMarker($data['singularRetinaMarker'])
+            ->setMarker($data['marker'])
             ->setActive($data['active']);
 
         $this->entityManager->persist($retailer);
@@ -76,8 +76,7 @@ class RetailerFormDataHandler implements FormDataHandlerInterface
             ->setPhone($data['phone'])
             ->setEmail($data['email'])
             ->setGroup($data['group'])
-            ->setSingularMarker($data['singularMarker'])
-            ->setSingularRetinaMarker($data['singularRetinaMarker'])
+            ->setMarker($data['marker'])
             ->setActive($data['active']);
 
         $this->entityManager->flush();
@@ -94,6 +93,10 @@ class RetailerFormDataHandler implements FormDataHandlerInterface
         $groupRepository = $this->entityManager->getRepository(Group::class);
         $data['group'] = $groupRepository
             ->findOneBy(['id' => $data['id_group']]);
+
+        $markerRepository = $this->entityManager->getRepository(Marker::class);
+        $data['marker'] = $markerRepository
+            ->findOneBy(['id' => $data['id_marker']]);
 
         return $data;
     }

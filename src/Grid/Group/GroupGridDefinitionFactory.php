@@ -39,18 +39,10 @@ final class GroupGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'name',
                 ])
             )
-            ->add((new DataColumn('group_marker'))
+            ->add((new DataColumn('marker'))
                 ->setName($this->trans('Marker', [], $this->translationDomain))
                 ->setOptions([
-                    'field' => 'group_marker',
-                ])
-            )
-            ->add((new DataColumn('group_retina_marker'))
-                ->setName(
-                    $this->trans('Retina Marker', [], $this->translationDomain)
-                )
-                ->setOptions([
-                    'field' => 'group_retina_marker',
+                    'field' => 'marker_name',
                 ])
             )
             ->add((new DataColumn('stack_order'))

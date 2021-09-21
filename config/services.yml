@@ -41,6 +41,8 @@ services:
   prestashop.module.retailers_map.form.group.type:
     class: 'PrestaShop\Module\RetailersMap\Form\Group\GroupType'
     public: true
+    arguments:
+      - '@prestashop.module.retailers_map.form.marker.choice_provider'
     tags:
       - { name: form.type }
   
@@ -93,6 +95,7 @@ services:
       - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
       - '@prestashop.adapter.form.choice_provider.country_state_by_id'
       - '@prestashop.module.retailers_map.form.group.choice_provider'
+      - '@prestashop.module.retailers_map.form.marker.choice_provider'
       - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
       - '@translator'
     tags:
@@ -158,6 +161,11 @@ services:
     factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
     arguments:
       - '@prestashop.module.retailers_map.form.identifiable_object.marker.data_handler'
+
+  prestashop.module.retailers_map.form.marker.choice_provider:
+    class: 'PrestaShop\Module\RetailersMap\Form\Marker\MarkerChoiceProvider'
+    arguments:
+      - '@doctrine.orm.default_entity_manager'
 
   # GRID SERVICES
   ##############################################################################

@@ -37,6 +37,11 @@ class RetailerType extends AbstractType
     private $groupsChoiceProvider;
 
     /**
+     * @var FormChoiceProviderInterface
+     */
+    private $markersChoiceProvider;
+
+    /**
      * @var int
      */
     private $contextCountryId;
@@ -53,12 +58,14 @@ class RetailerType extends AbstractType
         array $countryChoices,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
         FormChoiceProviderInterface $groupsChoiceProvider,
+        FormChoiceProviderInterface $markersChoiceProvider,
         $contextCountryId,
         TranslatorInterface $translator
     ) {
         $this->countryChoices = $countryChoices;
         $this->statesChoiceProvider = $statesChoiceProvider;
         $this->groupsChoiceProvider = $groupsChoiceProvider;
+        $this->markersChoiceProvider = $markersChoiceProvider;
         $this->contextCountryId = $contextCountryId;
         $this->translator = $translator;
     }
@@ -190,19 +197,13 @@ class RetailerType extends AbstractType
                     ),
                 ])],
             ])
-            ->add('singularMarker', TextType::class, [
-                'label' => 'Default singular marker',
-                'help' => 'Overrides group marker with a retailer-specific icon file',
+            ->add('id_marker', ChoiceType::class, [
+                'label' => 'Marker',
                 'translation_domain' => 'Modules.Retailersmap.Retailer',
+                'help' => 'Overrides group marker with a retailer-specific icon file. ' . 
+                    'Markers must be previously created in Markers tab',
                 'required' => false,
-                'attr' => ['maxlength' => '255'],
-            ])
-            ->add('singularRetinaMarker', TextType::class, [       //this will be separated
-                'label' => 'Retina singular marker',
-                'help' => 'Name of high resolution singular marker icon file',
-                'translation_domain' => 'Modules.Retailersmap.Retailer',
-                'required' => false,
-                'attr' => ['maxlength' => '255'],
+                'choices' => $this->markersChoiceProvider->getChoices()
             ])
             ->add('active', SwitchType::class, [
                 'label' => 'Active',

@@ -35,6 +35,7 @@ final class RetailerQueryBuilder extends AbstractDoctrineQueryBuilder
         $langCondition = 'c.id_lang = '.$this->contextLangId;
         $countryCondition = $langCondition.' AND r.id_country = c.id_country';
         $groupCondition = 'r.id_group = g.id_group';
+        $markerCondition = 'r.id_marker = m.id_marker';
 
         return $this->connection
             ->createQueryBuilder()
@@ -42,10 +43,12 @@ final class RetailerQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('s.name AS state')
             ->addSelect('c.name AS country')
             ->addSelect('g.name AS group_name')
+            ->addSelect('m.name AS marker_name')
             ->from($pr.'retailersmap_retailer', 'r')
             ->leftJoin('r', $pr.'state', 's', $stateCondition)
             ->leftJoin('r', $pr.'country_lang', 'c', $countryCondition)
-            ->leftJoin('r', $pr.'retailersmap_group', 'g', $groupCondition);
+            ->leftJoin('r', $pr.'retailersmap_group', 'g', $groupCondition)
+            ->leftJoin('r', $pr.'retailersmap_marker', 'm', $markerCondition);
             //->where('r.active = 1')
     }
 

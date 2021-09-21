@@ -7,6 +7,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 
@@ -105,24 +106,10 @@ final class RetailerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'group_name',
                 ])
             )
-            ->add((new DataColumn('singular_marker'))
-                ->setName(
-                    $this->trans(
-                        'Singular Marker', [], $this->translationDomain
-                    )
-                )
+            ->add((new DataColumn('marker'))
+                ->setName($this->trans('Marker', [], $this->translationDomain))
                 ->setOptions([
-                    'field' => 'singular_marker',
-                ])
-            )
-            ->add((new DataColumn('singular_retina_marker'))
-                ->setName(
-                    $this->trans(
-                        'Singular Retina Marker', [], $this->translationDomain
-                    )
-                )
-                ->setOptions([
-                    'field' => 'singular_retina_marker',
+                    'field' => 'marker_name',
                 ])
             )
             ->add((new DataColumn('active'))  // Should be ToggleColumn, but it would require change in controller

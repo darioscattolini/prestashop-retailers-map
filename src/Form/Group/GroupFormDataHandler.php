@@ -6,6 +6,7 @@ namespace PrestaShop\Module\RetailersMap\Form\Group;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\Module\RetailersMap\Entity\RetailersmapGroup as Group;
+use PrestaShop\Module\RetailersMap\Entity\RetailersmapMarker as Marker;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 
 class GroupFormDataHandler implements FormDataHandlerInterface
@@ -28,8 +29,7 @@ class GroupFormDataHandler implements FormDataHandlerInterface
         $group = new Group();
         $group
             ->setName($data['name'])
-            ->setGroupMarker($data['groupMarker'])
-            ->setGroupRetinaMarker($data['groupRetinaMarker'])
+            ->setMarker($data['marker'])
             ->setStackOrder($data['stackOrder']);
 
         $this->entityManager->persist($group);
@@ -49,12 +49,19 @@ class GroupFormDataHandler implements FormDataHandlerInterface
         $group = $groupRepository->findOneBy(['id' => $id]);
 
         $group->setName($data['name'])
-            ->setGroupMarker($data['groupMarker'])
-            ->setGroupRetinaMarker($data['groupRetinaMarker'])
+            ->setMarker($this->getMarker($data['id_marker']))
             ->setStackOrder($data['stackOrder']);
 
         $this->entityManager->flush();
 
         return $group->getId();
+    }
+
+    private function getMarker(int $id): Marker
+    {
+        $markerRepository = $this->entityManager->getRepository(Marker::class);
+        $marker = $markerRepository->findOneBy(['id' => $id]);
+
+        return $marker;
     }
 }
