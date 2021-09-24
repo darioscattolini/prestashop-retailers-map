@@ -27,9 +27,11 @@ class GroupFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         $group = new Group();
+        $marker = $data['id_marker'] ? $this->getMarker($data['id_marker']) : null;
+
         $group
             ->setName($data['name'])
-            ->setMarker($this->getMarker($data['id_marker']))
+            ->setMarker($marker)
             ->setStackOrder($data['stackOrder']);
 
         $this->entityManager->persist($group);
@@ -47,9 +49,10 @@ class GroupFormDataHandler implements FormDataHandlerInterface
 
         /** @var Group $group */
         $group = $groupRepository->findOneBy(['id' => $id]);
+        $marker = $data['id_marker'] ? $this->getMarker($data['id_marker']) : null;
 
         $group->setName($data['name'])
-            ->setMarker($this->getMarker($data['id_marker']))
+            ->setMarker($marker)
             ->setStackOrder($data['stackOrder']);
 
         $this->entityManager->flush();

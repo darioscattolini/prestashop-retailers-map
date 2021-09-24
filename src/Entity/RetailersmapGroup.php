@@ -44,7 +44,7 @@ class RetailersmapGroup
      */
     private $stackOrder;
 
-    //### RETURN TYPES IN METHODS WERE COMMENTED OUT BECAUSE OF OUTDATED DOCTRINE VERSION ERROR
+    ## TYPES IN METHODS WERE COMMENTED OUT BECAUSE OF OUTDATED DOCTRINE VERSION ERROR ##
 
     /**
      * @return int
@@ -83,7 +83,7 @@ class RetailersmapGroup
     /**
      * @return $this
      */
-    public function setMarker(?RetailersmapMarker $marker)/*: self */
+    public function setMarker(/*?RetailersmapMarker*/ $marker)/*: self */
     {
         $this->marker = $marker;
 

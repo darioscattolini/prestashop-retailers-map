@@ -111,8 +111,6 @@ class MarkerType extends AbstractType
                 
                 /** @var Form */
                 $form = $event->getForm();
-
-                var_dump($marker);
                 
                 if (!$marker || !isset($marker['fileNameDefault'])) {
                     $form->add('iconDefault', FileType::class, [
